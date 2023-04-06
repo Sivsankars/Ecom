@@ -3,6 +3,8 @@ package com.consumeapi.service;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,14 +23,15 @@ public class APIService {
 		this.restTemplate = restTemplate;
 	}
 	
-	public User consumeAPI() {		
-		try {
-			return restTemplate.getForObject(
-					new URL("https://jsonplaceholder.typicode.com/users/1").toURI(), 
-					User.class);
-		} catch (RestClientException | MalformedURLException | URISyntaxException e) {
-			e.printStackTrace();
+	public List<User> consumeAPI() {		
+		System.out.println("hi");
+		User users[]= restTemplate.getForObject(
+				"https://jsonplaceholder.typicode.com/users", 
+				User[].class);
+		for(int i=0;i<users.length;i++) {
+			System.out.println(users[i]);
 		}
-		return null;
+		return Arrays.asList(users);
+
 	}
 }
