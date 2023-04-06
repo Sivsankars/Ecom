@@ -19,8 +19,7 @@ public class APIService {
 		this.restTemplate = restTemplate;
 	}
 	
-	public Object consumeAPI() {		
-		String userName="arunsnair135";
+	public Object consumeAPI(String userName) {		
 		try {
 			return restTemplate.getForObject(
 					new URL("https://api.github.com/users/"+userName+"/repos").toURI(), 
