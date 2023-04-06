@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import com.consumeapi.ModelObject.User;
+
 @Service
 public class APIService {
 	
@@ -19,11 +21,11 @@ public class APIService {
 		this.restTemplate = restTemplate;
 	}
 	
-	public Object consumeAPI(String userName) {		
+	public User consumeAPI() {		
 		try {
 			return restTemplate.getForObject(
-					new URL("https://api.github.com/users/"+userName+"/repos").toURI(), 
-					Object.class);
+					new URL("https://jsonplaceholder.typicode.com/users/1").toURI(), 
+					User.class);
 		} catch (RestClientException | MalformedURLException | URISyntaxException e) {
 			e.printStackTrace();
 		}
