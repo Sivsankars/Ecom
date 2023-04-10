@@ -11,27 +11,48 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
+import com.consumeapi.ModelObject.Repos;
 import com.consumeapi.ModelObject.User;
+import com.consumeapi.repository.ReposRepository;
+import com.consumeapi.repository.UserRepository;
+
 
 @Service
 public class APIService {
 	
 	private final RestTemplate restTemplate;
+	private final UserRepository userRepository;
+	private final ReposRepository reposRepository;
 	
 	@Autowired
-	public APIService(RestTemplate restTemplate) {
+	public APIService(RestTemplate restTemplate,
+			UserRepository userRepository,
+			ReposRepository reposRepository) {
 		this.restTemplate = restTemplate;
+		this.userRepository=userRepository;
+		this.reposRepository=reposRepository;
 	}
 	
 	public List<User> consumeAPI() {		
-		System.out.println("hi");
 		User users[]= restTemplate.getForObject(
 				"https://jsonplaceholder.typicode.com/users", 
 				User[].class);
-		for(int i=0;i<users.length;i++) {
-			System.out.println(users[i]);
-		}
+		userRepository.saveAll(Arrays.asList(users));
 		return Arrays.asList(users);
 
+	}
+	
+	public List<Repos> consumeGitAPI(String userName) {
+		try {
+			Repos[] repos=restTemplate.getForObject(
+					new URL("https://api.github.com/users/"+userName+"/repos").toURI(),
+					Repos[].class);
+			reposRepository.saveAll(Arrays.asList(repos));
+			return Arrays.asList(repos);
+		} catch (RestClientException | MalformedURLException | URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
